@@ -1,53 +1,65 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 const PhoneVerification = ({ navigation }) => {
-  const [isChecked, setIsChecked] = useState(false); // State for checkbox
+  const [isChecked, setIsChecked] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Verify Your Phone Number</Text>
-      <Text style={styles.tit}>Let's Get Started</Text>
-      <Image source={require('./PHV.jpg')} style={styles.image} />
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Phone Number"
-        keyboardType="phone-pad"
-      />
-      <View style={styles.checkboxContainer}>
-        <TouchableOpacity
-          style={styles.checkbox}
-          onPress={() => setIsChecked(!isChecked)}
-        >
-          <Text style={styles.checkboxText}>
-            {isChecked ? '☑️' : '⬜️'}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.label}>I accept the Terms and Conditions</Text>
-      </View>
-      <TouchableOpacity
-        style={styles.verifyButton}
-        onPress={() => {
-          if (isChecked) {
-            navigation.navigate('OTP Verification');
-          } else {
-            alert('Please accept the Terms and Conditions.');
-          }
-        }}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Text style={styles.verifyButtonText}>Verify OTP</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.inner}>
+          <Text style={styles.title}>Verify Your Phone Number</Text>
+          <Text style={styles.tit}>Let's Get Started</Text>
+          <Image source={require('./PHV.jpg')} style={styles.image} />
+          
+          <TextInput
+            style={styles.input}
+            placeholder="Phone Number"
+            keyboardType="phone-pad"
+          />
+          
+          <View style={styles.checkboxContainer}>
+            <TouchableOpacity
+              style={styles.checkbox}
+              onPress={() => setIsChecked(!isChecked)}
+            >
+              <Text style={styles.checkboxText}>
+                {isChecked ? '☑️' : '⬜️'}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.label}>I accept the Terms and Conditions</Text>
+          </View>
+          
+          <TouchableOpacity
+            style={styles.verifyButton}
+            onPress={() => {
+              if (isChecked) {
+                navigation.navigate('OTP Verification');
+              } else {
+                alert('Please accept the Terms and Conditions.');
+              }
+            }}
+          >
+            <Text style={styles.verifyButtonText}>Verify OTP</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  inner: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
   title: {
     fontSize: 24,
@@ -63,7 +75,7 @@ const styles = StyleSheet.create({
     width: '80%',
     paddingLeft: 10,
     top: -190,
-    borderRadius:5
+    borderRadius: 5,
   },
   image: {
     width: 300,
@@ -94,18 +106,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   verifyButton: {
-    backgroundColor: 'lightgreen', // Light green background
-    borderColor: 'darkgreen',      // Dark green border
-    borderWidth: 2,                // Border thickness
-    paddingVertical: 15,           // Vertical padding
-    paddingHorizontal: 40,         // Horizontal padding
-    borderRadius: 10,              // Rounded corners
+    backgroundColor: 'lightgreen',
+    borderColor: 'darkgreen',
+    borderWidth: 2,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
     marginTop: 20,
   },
   verifyButtonText: {
-    color: 'darkgreen',            // Dark green text color
-    fontWeight: 'bold',            // Bold text
-    fontSize: 16,                  // Text size
+    color: 'darkgreen',
+    fontWeight: 'bold',
+    fontSize: 16,
     textAlign: 'center',
   },
 });
