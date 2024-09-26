@@ -3,10 +3,10 @@ import { View, Text, Button,Image, StyleSheet,TouchableWithoutFeedback } from 'r
 import { useNavigation } from '@react-navigation/native';
 
 const WelcomeScreen = () => {
-  const navigation = useNavigation(); // Hook to get access to navigation
+  const navigation = useNavigation();
 
   const handleScreenPress = () => {
-    navigation.navigate('Phone Number Verification'); // Navigate to PhoneVerification page
+    navigation.navigate('Phone Number Verification');
   };
   return (
     <TouchableWithoutFeedback onPress={handleScreenPress}>

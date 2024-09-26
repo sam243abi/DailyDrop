@@ -18,6 +18,7 @@ const App = () => {
         <Stack.Screen name="Phone Number Verification" component={PhoneVerification} />
         <Stack.Screen name="OTP Verification" component={OtpVerification} />
         <Stack.Screen name="ProfileCompletion" component={ProfileCompletion} />
+        <Stack.Screen name="DeliveryAddress" component={DeliveryAddress} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    top: -130,
+    top: -80,
   },
   input: {
     height: 40,
@@ -74,27 +74,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '80%',
     paddingLeft: 10,
-    top: -190,
+    top: -160,
     borderRadius: 5,
   },
   image: {
     width: 300,
     height: 300,
     resizeMode: 'contain',
-    top: -170,
+    top: -140,
   },
   tit: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    top: -140,
+    top: -80,
     paddingRight: 10,
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    top: -180,
+    top: -160,
   },
   checkbox: {
     marginRight: 8,
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 10,
     marginTop: 20,
+    top:-120
   },
   verifyButtonText: {
     color: 'darkgreen',
