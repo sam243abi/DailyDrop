@@ -7,6 +7,7 @@ import PhoneVerification from './SRC/Screens/PhoneVerification';
 import OtpVerification from './SRC/Screens/OtpVerification';
 import ProfileCompletion from './SRC/Screens/ProfileCompletion';
 import DeliveryAddress from './SRC/Screens/DeliveryAddress';
+import Daate from './SRC/Screens/date';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ const App = () => {
         <Stack.Screen name="OTP Verification" component={OtpVerification} />
         <Stack.Screen name="ProfileCompletion" component={ProfileCompletion} />
         <Stack.Screen name="DeliveryAddress" component={DeliveryAddress} />
+        <Stack.Screen name="Learning" component={Daate} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -10,7 +10,7 @@ const PhoneVerification = ({ navigation }) => {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={styles.inner}>
+        <View style={styles.in}>
           <Text style={styles.title}>Verify Your Phone Number</Text>
           <Text style={styles.tit}>Let's Get Started</Text>
           <Image source={require('./PHV.jpg')} style={styles.image} />
@@ -21,12 +21,12 @@ const PhoneVerification = ({ navigation }) => {
             keyboardType="phone-pad"
           />
           
-          <View style={styles.checkboxContainer}>
+          <View style={styles.cbContainer}>
             <TouchableOpacity
-              style={styles.checkbox}
+              style={styles.cb}
               onPress={() => setIsChecked(!isChecked)}
             >
-              <Text style={styles.checkboxText}>
+              <Text style={styles.cbtext}>
                 {isChecked ? '☑️' : '⬜️'}
               </Text>
             </TouchableOpacity>
@@ -34,7 +34,7 @@ const PhoneVerification = ({ navigation }) => {
           </View>
           
           <TouchableOpacity
-            style={styles.verifyButton}
+            style={styles.Button}
             onPress={() => {
               if (isChecked) {
                 navigation.navigate('OTP Verification');
@@ -43,7 +43,7 @@ const PhoneVerification = ({ navigation }) => {
               }
             }}
           >
-            <Text style={styles.verifyButtonText}>Verify OTP</Text>
+            <Text style={styles.ButtonText}>Verify OTP</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  inner: {
+  in: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -90,22 +90,22 @@ const styles = StyleSheet.create({
     top: -80,
     paddingRight: 10,
   },
-  checkboxContainer: {
+  cbContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
     top: -160,
   },
-  checkbox: {
+  cb: {
     marginRight: 8,
   },
-  checkboxText: {
+  cbtext: {
     fontSize: 24,
   },
   label: {
     fontSize: 16,
   },
-  verifyButton: {
+  Button: {
     backgroundColor: 'lightgreen',
     borderColor: 'darkgreen',
     borderWidth: 2,
@@ -113,9 +113,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 10,
     marginTop: 20,
-    top:-120
+    top:-90
   },
-  verifyButtonText: {
+  ButtonText: {
     color: 'darkgreen',
     fontWeight: 'bold',
     fontSize: 16,
