@@ -12,20 +12,13 @@ const ProfileCompletion = ({ navigation }) => {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-
-  // Handle Confirming the Date from Picker
   const handleConfirm = (date) => {
     const formattedDate = date.toLocaleDateString('en-GB');
     setDob(formattedDate);
     hideDatePicker();
   };
-
-  // Function to handle manual input with auto-formatting
   const handleDobChange = (input) => {
-    // Remove all non-digit characters
     const cleaned = ('' + input).replace(/\D/g, '');
-
-    // Format as DD/MM/YYYY
     let formatted = cleaned;
     if (cleaned.length > 2) {
       formatted = `${cleaned.slice(0, 2)}/${cleaned.slice(2)}`;
@@ -88,9 +81,9 @@ const ProfileCompletion = ({ navigation }) => {
                 placeholder="DOB"
                 placeholderTextColor="#B0B0B0"
                 value={dob}
-                onChangeText={handleDobChange} // Handle manual input
+                onChangeText={handleDobChange} 
                 keyboardType="numeric"
-                maxLength={10} // Limit input to DD/MM/YYYY format
+                maxLength={10} 
               />
               <TouchableOpacity onPress={showDatePicker}>
                 <Ionicons
@@ -110,8 +103,6 @@ const ProfileCompletion = ({ navigation }) => {
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </View>
-
-          {/* DateTime Picker Modal */}
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
             mode="date"
