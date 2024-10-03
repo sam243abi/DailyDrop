@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
-import {View,Keyboard,Text,TouchableOpacity,StyleSheet,KeyboardAvoidingView,ScrollView,TextInput,TouchableWithoutFeedback,Platform} from 'react-native';
+import { View, Keyboard, Text, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, TextInput, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const ProfileCompletion = ({ navigation }) => {
   const [dob, setDob] = useState('');
+  const [firstName, setFirstName] = useState(''); 
+  const [lastName, setLastName] = useState(''); 
+  const [email, setEmail] = useState(''); 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [errorMessages, setErrorMessages] = useState({ 
+    firstName: '',
+    lastName: '',
+    email: '',
+    dob: '',
+  });
+
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
+
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
+
   const handleConfirm = (date) => {
     const formattedDate = date.toLocaleDateString('en-GB');
     setDob(formattedDate);
     hideDatePicker();
   };
+
   const handleDobChange = (input) => {
     const cleaned = ('' + input).replace(/\D/g, '');
     let formatted = cleaned;
@@ -28,6 +41,30 @@ const ProfileCompletion = ({ navigation }) => {
     }
 
     setDob(formatted);
+  };
+  const validateFields = () => {
+    const errors = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      dob: '',
+    };
+
+    if (!firstName) {
+      errors.firstName = '*Please enter your first name.';
+    }
+    if (!lastName) {
+      errors.lastName = '*Please enter your last name.';
+    }
+    if (!email) {
+      errors.email = '*Please enter your email.';
+    }
+    if (!dob) {
+      errors.dob = '*Please enter your date of birth.';
+    }
+
+    setErrorMessages(errors);
+    return !Object.values(errors).some(error => error);
   };
 
   return (
@@ -47,26 +84,41 @@ const ProfileCompletion = ({ navigation }) => {
             <Text style={styles.title2}>
               Fill in the details below so we can tailor our service just for you!
             </Text>
+
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
                 placeholder="First Name"
                 placeholderTextColor="#B0B0B0"
+                value={firstName}
+                onChangeText={setFirstName} 
               />
             </View>
+            {errorMessages.firstName ? (
+              <Text style={styles.errorText}>{errorMessages.firstName}</Text>
+            ) : null}
+
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
                 placeholder="Last Name"
                 placeholderTextColor="#B0B0B0"
+                value={lastName}
+                onChangeText={setLastName} 
               />
             </View>
+            {errorMessages.lastName ? (
+              <Text style={styles.errorText}>{errorMessages.lastName}</Text>
+            ) : null}
+
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
                 placeholder="Email"
                 placeholderTextColor="#B0B0B0"
                 keyboardType="email-address"
+                value={email}
+                onChangeText={setEmail} 
               />
               <Ionicons
                 name="mail-outline"
@@ -75,13 +127,17 @@ const ProfileCompletion = ({ navigation }) => {
                 style={styles.icon}
               />
             </View>
+            {errorMessages.email ? (
+              <Text style={styles.errorText}>{errorMessages.email}</Text>
+            ) : null}
+
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
                 placeholder="DOB"
                 placeholderTextColor="#B0B0B0"
                 value={dob}
-                onChangeText={handleDobChange} 
+                onChangeText={handleDobChange}
                 keyboardType="numeric"
                 maxLength={10} 
               />
@@ -94,11 +150,19 @@ const ProfileCompletion = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
+            {errorMessages.dob ? (
+              <Text style={styles.errorText}>{errorMessages.dob}</Text>
+            ) : null}
+
           </ScrollView>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('DeliveryAddress')}
+              onPress={() => {
+                if (validateFields()) {
+                  navigation.navigate('DeliveryAddress');
+                }
+              }}
             >
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
@@ -175,12 +239,22 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    top: -200,
+    //top: -200,
+    transform: [{ translateY: -180 }],
   },
   buttonText: {
     color: '#333',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
+    alignSelf: 'flex-start', 
+    marginLeft: 15, 
+    //top:-160,
+    transform: [{ translateY: -160 }],
   },
 });
 

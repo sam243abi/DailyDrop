@@ -8,6 +8,9 @@ Geocoder.init('AIzaSyBv5qP0vdJ4PR5Qvj9LjYv5SE0GWrhg-50');
 
 const DeliveryAddress = () => {
   const navigation = useNavigation();
+  const onSubmit = () => {
+    navigation.navigate('Intro');
+  };
   const [region, setRegion] = useState({
     latitude: 13.0827,
     longitude: 80.2707,
@@ -142,8 +145,6 @@ const DeliveryAddress = () => {
             value={address.landmark}
             onChangeText={(text) => setAddress((prev) => ({ ...prev, landmark: text }))}
           />
-
-          {/* Map View */}
           <MapView
             style={styles.map}
             region={region}
@@ -155,7 +156,8 @@ const DeliveryAddress = () => {
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={handleSearchLocation} 
+              //onPress={handleSearchLocation} 
+              onPress={onSubmit}
             >
               <Text style={styles.buttonText}>Find Location</Text>
             </TouchableOpacity>

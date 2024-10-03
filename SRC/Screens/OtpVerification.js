@@ -4,7 +4,8 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingVi
 const OtpVerification = ({ navigation }) => {
   const [otp, setOtp] = useState(['', '', '', '']);
   const [timer, setTimer] = useState(60);
-  const inputRefs = useRef([]);
+  const [error, setError] = useState(false); 
+  const inputRefs = useRef([]); 
 
   useEffect(() => {
     let interval = null;
@@ -17,21 +18,28 @@ const OtpVerification = ({ navigation }) => {
     }
     return () => clearInterval(interval);
   }, [timer]);
-
   const handleOtpChange = (index, value) => {
     if (/^[0-9]$/.test(value) || value === '') {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
+      setError(false); 
       if (value !== '' && index < otp.length - 1) {
-        inputRefs.current[index + 1].focus();
+        inputRefs.current[index + 1].focus(); 
       }
     }
   };
-
   const handleResendOtp = () => {
-    setTimer(60);
+    setTimer(60); 
     alert('OTP has been resent!');
+  };
+  const handleCompleteProfile = () => {
+    if (otp.some((digit) => digit === '')) { 
+      setError(true); 
+    } else {
+      setError(false); 
+      navigation.navigate('ProfileCompletion'); 
+    }
   };
 
   return (
@@ -43,12 +51,16 @@ const OtpVerification = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrol}>
         <Text style={styles.title}>Enter OTP to Verify Your Identity</Text>
         <Text style={styles.title2}>Check for the OTP we sent and enter it here:</Text>
+        
         <View style={styles.otpContainer}>
           {otp.map((digit, index) => (
             <TextInput
               key={index}
               ref={(el) => (inputRefs.current[index] = el)}
-              style={styles.otpInput}
+              style={[
+                styles.otpInput,
+                error && otp[index] === '' ? styles.inputError : null, 
+              ]}
               keyboardType="numeric"
               maxLength={1}
               value={digit}
@@ -61,6 +73,8 @@ const OtpVerification = ({ navigation }) => {
             />
           ))}
         </View>
+        {error && <Text style={styles.errorText}>Please fill all OTP fields</Text>}
+
         <Text style={styles.timerText}>
           Wait for {timer > 0 ? `00:${timer.toString().padStart(2, '0')}` : '00:00'}
         </Text>
@@ -73,15 +87,14 @@ const OtpVerification = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.Button}
-          onPress={() => navigation.navigate('ProfileCompletion')}
+          onPress={handleCompleteProfile}
         >
           <Text style={styles.ButtonText}>Complete Profile</Text>
         </TouchableOpacity>
       </ScrollView>
-    </KeyboardAvoidingView>  
+    </KeyboardAvoidingView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -98,20 +111,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    top:-210
+    top: -210,
   },
   title2: {
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    top:-170,
+    top: -170,
   },
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
-    top:-150
+    top: -150,
   },
   otpInput: {
     borderWidth: 1,
@@ -122,16 +135,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     marginHorizontal: 5,
-
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
+    top: -110,
   },
   timerText: {
     fontSize: 16,
     marginBottom: 10,
-    top:-110,
+    top: -110,
   },
   resendButton: {
     marginBottom: 20,
-    top:-90,
+    top: -90,
   },
   Button: {
     backgroundColor: 'lightgreen',
@@ -140,7 +161,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    top:60,
+    top: 60,
   },
   ButtonText: {
     color: 'darkgreen',

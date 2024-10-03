@@ -2,52 +2,77 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 const PhoneVerification = ({ navigation }) => {
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handlePhoneNumberChange = (text) => {
+    const formattedText = text.replace(/[^0-9]/g, '');
+    setPhoneNumber(formattedText);
+  };
+
+  const handleVerifyOTP = () => {
+    if (!isChecked) {
+      alert('Please accept the Terms and Conditions.');
+      return;
+    }
+    
+    if (phoneNumber.length !== 10) {
+      setErrorMessage('*Phone number must be exactly 10 digits');
+    } else {
+      setErrorMessage('');
+      navigation.navigate('OTP Verification');
+    }
+  };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={styles.in}>
-          <Text style={styles.title}>Verify Your Phone Number</Text>
-          <Text style={styles.tit}>Let's Get Started</Text>
-          <Image source={require('./PHV.jpg')} style={styles.image} />
-          
-          <TextInput
-            style={styles.input}
-            placeholder="Phone Number"
-            keyboardType="phone-pad"
-          />
-          
-          <View style={styles.cbContainer}>
+    
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View style={styles.inner}>
+            <Text style={styles.title}>Verify Your Phone Number</Text>
+            <Text style={styles.subtitle}>Let's Get Started</Text>
+            <Image source={require('./images/PHV.jpg')} style={styles.image} />
+            <View style={styles.phoneInputContainer}>
+              <View style={styles.prefixContainer}>
+                <Text style={styles.prefixText}>+91</Text>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="Phone Number"
+                keyboardType="phone-pad"
+                maxLength={10}
+                value={phoneNumber}
+                onChangeText={handlePhoneNumberChange}
+              />
+            </View>
+            {errorMessage ? (
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            ) : null}
+            <View style={styles.cbContainer}>
+              <TouchableOpacity
+                style={styles.cb}
+                onPress={() => setIsChecked(!isChecked)}
+              >
+                <Text style={styles.cbtext}>
+                  {isChecked ? '☑️' : '⬜️'}
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.label}>I accept the Terms and Conditions</Text>
+            </View>
             <TouchableOpacity
-              style={styles.cb}
-              onPress={() => setIsChecked(!isChecked)}
+              style={styles.Button}
+              onPress={handleVerifyOTP}
             >
-              <Text style={styles.cbtext}>
-                {isChecked ? '☑️' : '⬜️'}
-              </Text>
+              <Text style={styles.ButtonText}>Verify OTP</Text>
             </TouchableOpacity>
-            <Text style={styles.label}>I accept the Terms and Conditions</Text>
           </View>
-          
-          <TouchableOpacity
-            style={styles.Button}
-            onPress={() => {
-              if (isChecked) {
-                navigation.navigate('OTP Verification');
-              } else {
-                alert('Please accept the Terms and Conditions.');
-              }
-            }}
-          >
-            <Text style={styles.ButtonText}>Verify OTP</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+      
   );
 };
 
@@ -56,45 +81,60 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  in: {
+  inner: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    top: -80,
+    marginBottom: 10,
+    textAlign: 'center',
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+  subtitle: {
+    fontSize: 20,
     marginBottom: 20,
-    width: '80%',
-    paddingLeft: 10,
-    top: -160,
-    borderRadius: 5,
+    textAlign: 'center',
   },
   image: {
     width: 300,
     height: 300,
     resizeMode: 'contain',
-    top: -140,
-  },
-  tit: {
-    fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 20,
-    top: -80,
+  },
+  phoneInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    marginBottom: 10,
+    width: '80%',
+    paddingHorizontal: 10,
+  },
+  prefixContainer: {
+    justifyContent: 'center',
     paddingRight: 10,
+  },
+  prefixText: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  input: {
+    flex: 1,
+    height: 40,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
   },
   cbContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    top: -160,
   },
   cb: {
     marginRight: 8,
@@ -112,8 +152,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    marginTop: 20,
-    top:-90
   },
   ButtonText: {
     color: 'darkgreen',
