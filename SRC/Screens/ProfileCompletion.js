@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
-import { View, Keyboard, Text, TouchableOpacity, StyleSheet, KeyboardAvoidingView, ScrollView, TextInput, TouchableWithoutFeedback, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  TextInput,
+  TouchableWithoutFeedback,
+  Platform,
+  Animated,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const ProfileCompletion = ({ navigation }) => {
   const [dob, setDob] = useState('');
-  const [firstName, setFirstName] = useState(''); 
-  const [lastName, setLastName] = useState(''); 
-  const [email, setEmail] = useState(''); 
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [errorMessages, setErrorMessages] = useState({ 
+  const [errorMessages, setErrorMessages] = useState({
     firstName: '',
     lastName: '',
     email: '',
     dob: '',
   });
+  const keyboardHeight = useState(new Animated.Value(0))[0];
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -42,6 +55,7 @@ const ProfileCompletion = ({ navigation }) => {
 
     setDob(formatted);
   };
+
   const validateFields = () => {
     const errors = {
       firstName: '',
@@ -64,8 +78,42 @@ const ProfileCompletion = ({ navigation }) => {
     }
 
     setErrorMessages(errors);
-    return !Object.values(errors).some(error => error);
+    return !Object.values(errors).some((error) => error);
   };
+
+  useEffect(() => {
+    // Set up keyboard listeners
+    const keyboardShowEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const keyboardHideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const keyboardDidShowListener = Keyboard.addListener(keyboardShowEvent, (event) => {
+      Animated.timing(keyboardHeight, {
+        duration: Platform.OS === 'ios' ? 250 : 100,
+        toValue: event.endCoordinates.height,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener(keyboardHideEvent, () => {
+      Animated.timing(keyboardHeight, {
+        duration: Platform.OS === 'ios' ? 250 : 100,
+        toValue: 0,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  // Animate the entire form when the keyboard opens
+  const translateY = keyboardHeight.interpolate({
+    inputRange: [0, 300],
+    outputRange: [0, -1], // Adjust this value to move the form higher or lower
+    extrapolate: 'clamp',
+  });
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -76,85 +124,87 @@ const ProfileCompletion = ({ navigation }) => {
       >
         <View style={styles.container}>
           <ScrollView
-            contentContainerStyle={styles.scrol}
+            contentContainerStyle={styles.scroll}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.title}>Complete Your Profile</Text>
-            <Text style={styles.title2}>
-              Fill in the details below so we can tailor our service just for you!
-            </Text>
+            <Animated.View style={{ transform: [{ translateY }] }}>
+              <Text style={styles.title}>                      Complete Your Profile</Text>
+              <Text style={styles.title2}>
+                Fill in the details below so we can tailor our service just for you!
+              </Text>
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="First Name"
-                placeholderTextColor="#B0B0B0"
-                value={firstName}
-                onChangeText={setFirstName} 
-              />
-            </View>
-            {errorMessages.firstName ? (
-              <Text style={styles.errorText}>{errorMessages.firstName}</Text>
-            ) : null}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="First Name"
+                  placeholderTextColor="#B0B0B0"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                />
+              </View>
+              {errorMessages.firstName ? (
+                <Text style={styles.errorText}>{errorMessages.firstName}</Text>
+              ) : null}
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Last Name"
-                placeholderTextColor="#B0B0B0"
-                value={lastName}
-                onChangeText={setLastName} 
-              />
-            </View>
-            {errorMessages.lastName ? (
-              <Text style={styles.errorText}>{errorMessages.lastName}</Text>
-            ) : null}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Last Name"
+                  placeholderTextColor="#B0B0B0"
+                  value={lastName}
+                  onChangeText={setLastName}
+                />
+              </View>
+              {errorMessages.lastName ? (
+                <Text style={styles.errorText}>{errorMessages.lastName}</Text>
+              ) : null}
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#B0B0B0"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail} 
-              />
-              <Ionicons
-                name="mail-outline"
-                size={20}
-                color="#B0B0B0"
-                style={styles.icon}
-              />
-            </View>
-            {errorMessages.email ? (
-              <Text style={styles.errorText}>{errorMessages.email}</Text>
-            ) : null}
-
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="DOB"
-                placeholderTextColor="#B0B0B0"
-                value={dob}
-                onChangeText={handleDobChange}
-                keyboardType="numeric"
-                maxLength={10} 
-              />
-              <TouchableOpacity onPress={showDatePicker}>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  placeholderTextColor="#B0B0B0"
+                  keyboardType="email-address"
+                  value={email}
+                  onChangeText={setEmail}
+                />
                 <Ionicons
-                  name="calendar-outline"
+                  name="mail-outline"
                   size={20}
                   color="#B0B0B0"
                   style={styles.icon}
                 />
-              </TouchableOpacity>
-            </View>
-            {errorMessages.dob ? (
-              <Text style={styles.errorText}>{errorMessages.dob}</Text>
-            ) : null}
+              </View>
+              {errorMessages.email ? (
+                <Text style={styles.errorText}>{errorMessages.email}</Text>
+              ) : null}
 
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="DOB"
+                  placeholderTextColor="#B0B0B0"
+                  value={dob}
+                  onChangeText={handleDobChange}
+                  keyboardType="numeric"
+                  maxLength={10}
+                />
+                <TouchableOpacity onPress={showDatePicker}>
+                  <Ionicons
+                    name="calendar-outline"
+                    size={20}
+                    color="#B0B0B0"
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
+              {errorMessages.dob ? (
+                <Text style={styles.errorText}>{errorMessages.dob}</Text>
+              ) : null}
+            </Animated.View>
           </ScrollView>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
@@ -184,7 +234,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  scrol: {
+  scroll: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -239,8 +289,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    //top: -200,
-    transform: [{ translateY: -180 }],
+    transform: [{ translateY: -150 }],
   },
   buttonText: {
     color: '#333',
@@ -251,9 +300,8 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginBottom: 10,
-    alignSelf: 'flex-start', 
-    marginLeft: 15, 
-    //top:-160,
+    alignSelf: 'flex-start',
+    marginLeft: 15,
     transform: [{ translateY: -160 }],
   },
 });

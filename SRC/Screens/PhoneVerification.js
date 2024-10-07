@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TextInput, 
+  Image, 
+  TouchableOpacity, 
+  Animated, 
+  TouchableWithoutFeedback, 
+  Keyboard, 
+  Platform 
+} from 'react-native';
 
 const PhoneVerification = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const keyboardHeight = useState(new Animated.Value(0))[0];
 
   const handlePhoneNumberChange = (text) => {
     const formattedText = text.replace(/[^0-9]/g, '');
@@ -25,54 +37,83 @@ const PhoneVerification = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    // Using different keyboard events for iOS (keyboardWillShow) vs Android (keyboardDidShow)
+    const keyboardShowEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const keyboardHideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const keyboardDidShowListener = Keyboard.addListener(keyboardShowEvent, (event) => {
+      Animated.timing(keyboardHeight, {
+        duration: Platform.OS === 'ios' ? 250 : 100, // Faster animation duration
+        toValue: event.endCoordinates.height,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener(keyboardHideEvent, () => {
+      Animated.timing(keyboardHeight, {
+        duration: Platform.OS === 'ios' ? 250 : 100, // Faster animation duration
+        toValue: 0,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  // Translate the entire form based on keyboard visibility
+  const translateY = keyboardHeight.interpolate({
+    inputRange: [0, 300], // Adjust as per your layout
+    outputRange: [0, -160], // Moves the form up when the keyboard opens
+    extrapolate: 'clamp',
+  });
+
   return (
-    
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <View style={styles.inner}>
-            <Text style={styles.title}>Verify Your Phone Number</Text>
-            <Text style={styles.subtitle}>Let's Get Started</Text>
-            <Image source={require('./images/PHV.jpg')} style={styles.image} />
-            <View style={styles.phoneInputContainer}>
-              <View style={styles.prefixContainer}>
-                <Text style={styles.prefixText}>+91</Text>
-              </View>
-              <TextInput
-                style={styles.input}
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
-                maxLength={10}
-                value={phoneNumber}
-                onChangeText={handlePhoneNumberChange}
-              />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Animated.View style={[styles.inner, { transform: [{ translateY }] }]}>
+          <Text style={styles.title}>Verify Your Phone Number</Text>
+          <Text style={styles.subtitle}>Let's Get Started</Text>
+          <Image source={require('./images/PHV.jpg')} style={styles.image} />
+          <View style={styles.phoneInputContainer}>
+            <View style={styles.prefixContainer}>
+              <Text style={styles.prefixText}>+91</Text>
             </View>
-            {errorMessage ? (
-              <Text style={styles.errorText}>{errorMessage}</Text>
-            ) : null}
-            <View style={styles.cbContainer}>
-              <TouchableOpacity
-                style={styles.cb}
-                onPress={() => setIsChecked(!isChecked)}
-              >
-                <Text style={styles.cbtext}>
-                  {isChecked ? '☑️' : '⬜️'}
-                </Text>
-              </TouchableOpacity>
-              <Text style={styles.label}>I accept the Terms and Conditions</Text>
-            </View>
-            <TouchableOpacity
-              style={styles.Button}
-              onPress={handleVerifyOTP}
-            >
-              <Text style={styles.ButtonText}>Verify OTP</Text>
-            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Phone Number"
+              keyboardType="phone-pad"
+              maxLength={10}
+              value={phoneNumber}
+              onChangeText={handlePhoneNumberChange}
+            />
           </View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-      
+          {errorMessage ? (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          ) : null}
+          <View style={styles.cbContainer}>
+            <TouchableOpacity
+              style={styles.cb}
+              onPress={() => setIsChecked(!isChecked)}
+            >
+              <Text style={styles.cbtext}>
+                {isChecked ? '☑️' : '⬜️'}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.label}>I accept the Terms and Conditions</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.Button}
+            onPress={handleVerifyOTP}
+          >
+            <Text style={styles.ButtonText}>Verify OTP</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
