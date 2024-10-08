@@ -7,14 +7,14 @@ import OtpVerification from './SRC/Screens/OtpVerification';
 import ProfileCompletion from './SRC/Screens/ProfileCompletion';
 import DeliveryAddress from './SRC/Screens/DeliveryAddress';
 import SlideShow from './SRC/Screens/SlideShow';
-
+import productscreen from './SRC/Screens/productscreen'
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="productscreen" component={productscreen} />
         <Stack.Screen name="Phone Number Verification" component={PhoneVerification} />
         <Stack.Screen name="OTP Verification" component={OtpVerification} />
         <Stack.Screen name="ProfileCompletion" component={ProfileCompletion} />
