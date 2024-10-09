@@ -14,7 +14,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="productscreen" component={productscreen} />
+        <Stack.Screen name="Product" component={productscreen} />
         <Stack.Screen name="Phone Number Verification" component={PhoneVerification} />
         <Stack.Screen name="OTP Verification" component={OtpVerification} />
         <Stack.Screen name="ProfileCompletion" component={ProfileCompletion} />

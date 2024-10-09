@@ -1,180 +1,119 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Button,
-  FlatList,
-  Modal,
-  ScrollView
-} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+import Collapsible from 'react-native-collapsible';
+import Swiper from 'react-native-swiper';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const OtpVerification = ({ navigation }) => {
-  const [count, setCount] = useState(1);
-  const [selectedSlot, setSelectedSlot] = useState('Select Delivery Slot');
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showDeliveryDateModal, setShowDeliveryDateModal] = useState(false); // Modal visibility state
-  const [selectedDays, setSelectedDays] = useState([]); // To track selected days
+const { width } = Dimensions.get('window');
 
-  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-  // Increase and decrease count
-  const increaseCount = () => setCount(count + 1);
-  const decreaseCount = () => setCount(count > 1 ? count - 1 : 1);
-
-  // Handle date picker
-  const onChangeDate = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
-  // Toggle Dropdown
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
-
-  // Handle slot selection
-  const handleSlotSelection = (slot) => {
-    setSelectedSlot(slot);
-    setShowDropdown(false); // Close dropdown after selection
-  };
-
-  // Toggle delivery date modal
-  const toggleDeliveryDateModal = () => {
-    setShowDeliveryDateModal(!showDeliveryDateModal);
-  };
-
-  // Handle checkbox toggle
-  const toggleDaySelection = (day) => {
-    setSelectedDays((prevDays) =>
-      prevDays.includes(day) ? prevDays.filter(d => d !== day) : [...prevDays, day]
-    );
-  };
-
-  // Handle delivery date submit
-  const submitDeliveryDates = () => {
-    setShowDeliveryDateModal(false);
-    console.log("Selected Days:", selectedDays);
-  };
-
-  // Delivery Slot Options
-  const deliverySlots = ['Daily', 'Alternate Day', 'Every 3 Days', 'Weekly', 'Monthly'];
+const ProductScreen = () => {
+  const [starRating, setStarRating] = useState(0); // Star rating for front-end
+  const [hoveredStar, setHoveredStar] = useState(0); // Track hovered star for interactive effect
+  const [isDescriptionCollapsed, setIsDescriptionCollapsed] = useState(true);
+  const [isShelfLifeCollapsed, setIsShelfLifeCollapsed] = useState(true);
+  const [isCertification, setIsCertification] = useState(true);
+  const [isReview, setIsReview] = useState(true);
 
   return (
     <View style={styles.container}>
-      {/* Product Section */}
-      <View style={styles.productContainer}>
-        <Image
-          source={require('./images/waterCan.jpg')}
-          style={styles.canImage}
-        />
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity style={styles.quantityButton} onPress={decreaseCount}>
-            <Text style={styles.buttonText}>-</Text>
-          </TouchableOpacity>
-          <Text style={styles.quantityText}>{count}</Text>
-          <TouchableOpacity style={styles.quantityButton} onPress={increaseCount}>
-            <Text style={styles.buttonText}>+</Text>
-          </TouchableOpacity>
+      {/* Slideshow */}
+      <View style={styles.swiperContainer}>
+        <Swiper showsButtons={true} autoplay={true} autoplayTimeout={3} style={styles.wrapper}>
+          <Image source={require('./images/milk.jpeg')} style={styles.si} />
+          <Image source={require('./images/shelf.jpeg')} style={styles.slideImage} />
+          <Image source={require('./images/ingre.jpeg')} style={styles.slideImage} />
+          <Image source={require('./images/nut.jpeg')} style={styles.slideImage} />
+          <Image source={require('./images/mai.jpeg')} style={styles.slideImage} />
+          <Image source={require('./images/fssai.jpeg')} style={styles.slideImage} />
+          <Image source={require('./images/bar.jpeg')} style={styles.slideImage} />
+        </Swiper>
+      </View>
+
+      <ScrollView style={styles.scrollView}>
+        {/* Product Info */}
+        <View style={styles.productInfo}>
+          <Text style={styles.productName}>Aavin Nice Toned Milk Pouch</Text>
+          <Text style={styles.productQuantity}>500 ml</Text>
+          <Text style={styles.productPrice}>₹20</Text>
+          <Text style={styles.subscribeText}>Subscribe now!</Text>
         </View>
-      </View>
 
-      {/* Select Delivery Slot */}
-      <View style={styles.deliverySlotContainer}>
-        <TouchableOpacity onPress={toggleDropdown} style={styles.deliverySlotButton}>
-          <Text style={styles.deliverySlotText}>{selectedSlot}</Text>
+        {/* Product Description */}
+        <TouchableOpacity
+          onPress={() => setIsDescriptionCollapsed(!isDescriptionCollapsed)}
+          style={styles.toggleButton}
+        >
+          <Text style={styles.toggleButtonText}>Product Description</Text>
         </TouchableOpacity>
-
-        {showDropdown && (
-          <View style={styles.dropdownContainer}>
-            {deliverySlots.map((slot) => (
-              <TouchableOpacity
-                key={slot}
-                style={styles.dropdownItem}
-                onPress={() => handleSlotSelection(slot)}
-              >
-                <Text style={styles.dropdownText}>{slot}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
-
-      {/* Subscription Start Date */}
-      <View style={styles.datePickerContainer}>
-        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
-          <Text style={styles.dateText}>
-            {date.toDateString()}
+        <Collapsible collapsed={isDescriptionCollapsed}>
+          <Text style={styles.descriptionText}>
+            Milk is the most common dairy product that is used every day by almost everyone. 
+            Consume directly or add to your breakfast cereal, daily tea/coffee, milkshake, smoothies, or other baked goods, desserts, and puddings. 
+            Source of nutrition for all age groups.
           </Text>
+        </Collapsible>
+
+        {/* Shelf Life */}
+        <TouchableOpacity
+          onPress={() => setIsShelfLifeCollapsed(!isShelfLifeCollapsed)}
+          style={styles.toggleButton}
+        >
+          <Text style={styles.toggleButtonText}>Shelf Life</Text>
         </TouchableOpacity>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={onChangeDate}
-          />
-        )}
-      </View>
+        <Collapsible collapsed={isShelfLifeCollapsed}>
+          <Text style={styles.descriptionText}>
+            The shelf life of the milk is 3 days when kept refrigerated.
+          </Text>
+        </Collapsible>
 
-      {/* Select Delivery Date Button */}
-      <TouchableOpacity style={styles.deliveryDateButton} onPress={toggleDeliveryDateModal}>
-        <Text style={styles.deliveryDateButtonText}>Select Delivery Date</Text>
-      </TouchableOpacity>
+        {/* Certification */}
+        <TouchableOpacity
+          onPress={() => setIsCertification(!isCertification)}
+          style={styles.toggleButton}
+        >
+          <Text style={styles.toggleButtonText}>Certifications</Text>
+        </TouchableOpacity>
+        <Collapsible collapsed={isCertification}>
+          <Text style={styles.descriptionText}>
+            This product is certified by FSSAI.
+          </Text>
+        </Collapsible>
 
-      {/* Delivery Address */}
-      <View style={styles.addressContainer}>
-        <Text style={styles.addressText}>BX0X, Radiance Shine, OMR, Kazhipattur</Text>
-      </View>
-
-      {/* Deposit Information */}
-      <View style={styles.depositContainer}>
-        <Text style={styles.depositText}>
-          Can Deposit of ₹150 per quantity will be collected during the first delivery.
-        </Text>
-      </View>
-
-      {/* Start Subscription Button */}
-      <TouchableOpacity style={styles.startButton}>
-        <Text style={styles.startButtonText}>Start Subscription</Text>
-      </TouchableOpacity>
-
-      {/* Delivery Date Modal */}
-      <Modal
-        visible={showDeliveryDateModal}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalContainer}>
-          <ScrollView style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Delivery Days</Text>
-            {daysOfWeek.map((day) => (
+        {/* Review Section */}
+        <TouchableOpacity
+          onPress={() => setIsReview(!isReview)}
+          style={styles.toggleButton}
+        >
+          <Text style={styles.reviewText}>Review</Text>
+        </TouchableOpacity>
+        <Collapsible collapsed={isReview}>
+          <View style={styles.starContainer}>
+            {/* Star Rating */}
+            {[1, 2, 3, 4, 5].map((star) => (
               <TouchableOpacity
-                key={day}
-                style={styles.checkboxContainer}
-                onPress={() => toggleDaySelection(day)}
+                key={star}
+                onPress={() => setStarRating(star)}
+                onMouseEnter={() => setHoveredStar(star)} // Change color on hover
+                onMouseLeave={() => setHoveredStar(0)} // Reset on leave
+                style={styles.starTouchable}
               >
-                <Text style={styles.checkboxLabel}>{day}</Text>
-                <Text style={styles.checkboxStatus}>
-                  {selectedDays.includes(day) ? '✔' : ''}
-                </Text>
+                <Icon
+                  name="star"
+                  size={30}
+                  color={star <= (hoveredStar || starRating) ? '#FFD700' : '#D3D3D3'} // Gold for filled stars and light gray for unfilled stars
+                />
               </TouchableOpacity>
             ))}
+            {/* Showing the selected star rating value */}
+            <Text style={styles.selectedRating}>{starRating}</Text>
+          </View>
+        </Collapsible>
+      </ScrollView>
 
-            {/* Submit Button */}
-            <TouchableOpacity style={styles.submitButton} onPress={submitDeliveryDates}>
-              <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
-      </Modal>
+      {/* Subscribe Button */}
+      <TouchableOpacity style={styles.subscribeButton}>
+        <Text style={styles.subscribeButtonText}>Subscribe Now</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -182,163 +121,91 @@ const OtpVerification = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
   },
-  productContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  swiperContainer: {
+    height: 350,
+    width: '100%',
   },
-  canImage: {
-    width: 80,
-    height: 80,
+  slideImage: {
+    height: '100%',
+    width: '100%',
   },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  quantityButton: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  quantityText: {
-    marginHorizontal: 10,
-    fontSize: 16,
-  },
-  deliverySlotContainer: {
-    marginTop: 20,
-  },
-  deliverySlotButton: {
-    padding: 10,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  deliverySlotText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  dropdownContainer: {
-    backgroundColor: '#f0f0f0',
-    marginTop: 5,
-    borderRadius: 5,
-  },
-  dropdownItem: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  dropdownText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  datePickerContainer: {
-    marginBottom: 20,
-  },
-  dateButton: {
-    backgroundColor: '#e0e0e0',
-    padding: 10,
-    borderRadius: 5,
-  },
-  dateText: {
-    fontSize: 16,
-  },
-  deliveryDateButton: {
-    backgroundColor: '#e0e0e0',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  deliveryDateButtonText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  addressContainer: {
-    marginBottom: 20,
-  },
-  addressText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  depositContainer: {
-    backgroundColor: '#f5f5f5',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-  },
-  depositText: {
-    fontSize: 14,
-    color: '#555',
-  },
-  startButton: {
-    backgroundColor: '#5cb85c',
-    padding: 15,
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  startButtonText: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  modalContainer: {
+  scrollView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)', // Transparent dark background
   },
-  modalContent: {
-    width: '80%',
-    backgroundColor: '#fff',
+  productInfo: {
     padding: 20,
-    borderRadius: 10,
-    maxHeight: '80%', // Prevents overflow if the content is large
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  checkboxContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#cccccc',
   },
-  checkboxLabel: {
+  productName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  productQuantity: {
     fontSize: 16,
+    marginVertical: 5,
   },
-  checkboxStatus: {
-    fontSize: 16,
-    color: '#5cb85c',
+  productPrice: {
+    fontSize: 18,
+    color: '#008000',
+    marginVertical: 5,
   },
-  submitButton: {
-    backgroundColor: '#5cb85c',
+  subscribeText: {
+    fontSize: 14,
+    color: '#ff8c00',
+  },
+  toggleButton: {
     padding: 15,
-    borderRadius: 5,
+    backgroundColor: '#ffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#dddddd',
+  },
+  toggleButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  descriptionText: {
+    padding: 15,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  subscribeButton: {
+    backgroundColor: '#0080ff',
+    padding: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
   },
-  submitButtonText: {
+  subscribeButtonText: {
     fontSize: 16,
-    color: '#fff',
+    color: '#ffffff',
     fontWeight: 'bold',
+  },
+  si: {
+    height: '100%',
+    width: '100%',
+  },
+  reviewText: {
+    top: 2,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  starContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  selectedRating: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    top: -30,
+  },
+  starTouchable: {
+    marginRight: 5, // Space between stars
   },
 });
 
-export default OtpVerification;
-
+export default ProductScreen;
