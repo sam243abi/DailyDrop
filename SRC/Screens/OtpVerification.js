@@ -6,35 +6,35 @@ const OtpVerification = ({ navigation }) => {
   const [timer, setTimer] = useState(60);
   const [error, setError] = useState(false);
   const inputRefs = useRef([]);
-  const moveAnim = useRef(new Animated.Value(0)).current; // For smooth transition
+  const moveAnim = useRef(new Animated.Value(0)).current;
 
+  // Timer to countdown OTP resend
   useEffect(() => {
     let interval = null;
     if (timer > 0) {
       interval = setInterval(() => {
         setTimer((prev) => prev - 1);
       }, 1000);
-    } else if (timer === 0) {
+    } else {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
   }, [timer]);
 
+  // Smooth keyboard transition
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', (event) => {
-      // Trigger animation with less delay when keyboard opens
       Animated.timing(moveAnim, {
-        toValue: -60, // Adjust this value based on how much you want the content to move up
-        duration: event.duration || 250, // Match animation duration with keyboard transition
+        toValue: -60, // Adjust this value for smooth transition
+        duration: event.duration || 250,
         useNativeDriver: true,
       }).start();
     });
 
     const keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', (event) => {
-      // Trigger animation immediately when keyboard starts to hide
       Animated.timing(moveAnim, {
         toValue: 0,
-        duration: event.duration || 250, // Match animation duration with keyboard transition
+        duration: event.duration || 250,
         useNativeDriver: true,
       }).start();
     });
@@ -52,7 +52,7 @@ const OtpVerification = ({ navigation }) => {
       setOtp(newOtp);
       setError(false);
       if (value !== '' && index < otp.length - 1) {
-        inputRefs.current[index + 1].focus();
+        inputRefs.current[index + 1].focus(); // Automatically move to next field
       }
     }
   };
@@ -64,23 +64,23 @@ const OtpVerification = ({ navigation }) => {
 
   const handleCompleteProfile = () => {
     if (otp.some((digit) => digit === '')) {
-      setError(true);
+      setError(true);  // Show error if any OTP field is empty
     } else {
       setError(false);
-      navigation.navigate('ProfileCompletion');
+      navigation.navigate('ProfileCompletion');  // Navigate to next screen
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
       <ScrollView contentContainerStyle={styles.scroll}>
         <Animated.View style={[styles.animatedContainer, { transform: [{ translateY: moveAnim }] }]}>
           <Text style={styles.title}>Enter OTP to Verify Your Identity</Text>
-          <Text style={styles.title2}>Check for the OTP we sent and enter it here:</Text>
+          <Text style={styles.subtitle}>Check for the OTP we sent and enter it here:</Text>
 
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (
@@ -106,7 +106,7 @@ const OtpVerification = ({ navigation }) => {
           {error && <Text style={styles.errorText}>Please fill all OTP fields</Text>}
 
           <Text style={styles.timerText}>
-            Wait for {timer > 0 ? `00:${timer.toString().padStart(2, '0')}` : '00:00'}
+            {timer > 0 ? `Wait for 00:${timer.toString().padStart(2, '0')}` : '00:00'}
           </Text>
           <TouchableOpacity
             style={styles.resendButton}
@@ -147,20 +147,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    top: -210,
   },
-  title2: {
+  subtitle: {
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    top: -170,
   },
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
-    top: -150,
   },
   otpInput: {
     borderWidth: 1,
@@ -179,16 +176,13 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     marginBottom: 10,
-    top: -110,
   },
   timerText: {
     fontSize: 16,
     marginBottom: 10,
-    top: -110,
   },
   resendButton: {
     marginBottom: 20,
-    top: -90,
   },
   Button: {
     backgroundColor: 'lightgreen',
@@ -197,7 +191,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    top: 60,
   },
   ButtonText: {
     color: 'darkgreen',

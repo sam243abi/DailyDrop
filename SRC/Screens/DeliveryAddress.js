@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Keyboard, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Keyboard, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import Geocoder from 'react-native-geocoding';
@@ -29,25 +29,21 @@ const DeliveryAddress = () => {
     landmark: '',
   });
 
-
   const handleMapPress = async (e) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
 
- 
     setMarker({
       latitude,
       longitude,
     });
 
-
     try {
       const result = await Geocoder.from(latitude, longitude);
       const addressComponents = result.results[0].address_components;
-      
+
       let street = '';
       let city = '';
       let postalCode = '';
-      
 
       addressComponents.forEach(component => {
         if (component.types.includes('route')) {
@@ -61,7 +57,6 @@ const DeliveryAddress = () => {
         }
       });
 
-
       setAddress({
         ...address,
         street: street || '',
@@ -70,38 +65,15 @@ const DeliveryAddress = () => {
         landmark: '',
       });
 
-
       setRegion({
         ...region,
         latitude,
         longitude,
       });
-
     } catch (error) {
       console.error(error);
       alert('Could not fetch address. Please try again.');
     }
-  };
-
-  const handleSearchLocation = () => {
-    const searchAddress = `${address.street}, ${address.city}, ${address.postalCode}`;
-    Geocoder.from(searchAddress)
-      .then(json => {
-        const location = json.results[0].geometry.location;
-        setRegion({
-          ...region,
-          latitude: location.lat,
-          longitude: location.lng,
-        });
-        setMarker({
-          latitude: location.lat,
-          longitude: location.lng,
-        });
-      })
-      .catch(error => {
-        alert('Could not find the location. Please try again.');
-        console.error(error);
-      });
   };
 
   return (
@@ -111,9 +83,19 @@ const DeliveryAddress = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
       >
-        <View style={styles.content}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          
+          {/* MapView positioned at the top */}
+          <MapView
+            style={styles.map}
+            region={region}
+            onPress={handleMapPress}
+          >
+            <Marker coordinate={marker} />
+          </MapView>
+
           <Text style={styles.title}>Where Should We Deliver?</Text>
-          <Text style={styles.title2}>Enter your address or tap on the map</Text>
+          <Text style={styles.title2}>Enter your address</Text>
 
           <TextInput
             style={styles.input}
@@ -145,24 +127,16 @@ const DeliveryAddress = () => {
             value={address.landmark}
             onChangeText={(text) => setAddress((prev) => ({ ...prev, landmark: text }))}
           />
-          <MapView
-            style={styles.map}
-            region={region}
-            onPress={handleMapPress} 
-          >
-            <Marker coordinate={marker} />
-          </MapView>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
-              //onPress={handleSearchLocation} 
               onPress={onSubmit}
             >
               <Text style={styles.buttonText}>Find Location</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
@@ -171,35 +145,30 @@ const DeliveryAddress = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   content: {
-    width: '90%',
-    alignItems: 'center',
-    marginTop: 40,
+    flexGrow: 1,
+    justifyContent: 'flex-start', // Adjust to top-align content
+    paddingHorizontal: 20,
+    paddingBottom: 60,  // Extra padding for the button visibility
   },
   map: {
-    width: 380,
-    height: 200,
-    marginVertical: 20,
-    top: -420
+    width: '100%',
+    height: 300, // Adjust height if needed
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
-    top:-80
   },
   title2: {
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
     marginBottom: 20,
-    paddingHorizontal: 20,
-    top:-90
   },
   input: {
     height: 40,
@@ -209,7 +178,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: 10,
     borderRadius: 5,
-    top:130
   },
   buttonContainer: {
     width: '100%',
@@ -223,7 +191,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 10,
     marginTop: 20,
-    top:-140
+    top:-30
   },
   buttonText: {
     color: '#333',

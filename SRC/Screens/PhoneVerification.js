@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   Text, 
@@ -6,20 +6,19 @@ import {
   TextInput, 
   Image, 
   TouchableOpacity, 
-  Animated, 
-  TouchableWithoutFeedback, 
   Keyboard, 
-  Platform 
+  KeyboardAvoidingView, 
+  Platform ,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 const PhoneVerification = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const keyboardHeight = useState(new Animated.Value(0))[0];
 
   const handlePhoneNumberChange = (text) => {
-    const formattedText = text.replace(/[^0-9]/g, '');
+    const formattedText = text.replace(/[^0-9]/g, ''); // Allow only numbers
     setPhoneNumber(formattedText);
   };
 
@@ -28,53 +27,23 @@ const PhoneVerification = ({ navigation }) => {
       alert('Please accept the Terms and Conditions.');
       return;
     }
-    
+
     if (phoneNumber.length !== 10) {
       setErrorMessage('*Phone number must be exactly 10 digits');
     } else {
       setErrorMessage('');
-      navigation.navigate('OTP Verification');
+      navigation.navigate('OTP Verification'); // Navigate to OTP verification screen
     }
   };
 
-  useEffect(() => {
-    // Using different keyboard events for iOS (keyboardWillShow) vs Android (keyboardDidShow)
-    const keyboardShowEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
-    const keyboardHideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
-
-    const keyboardDidShowListener = Keyboard.addListener(keyboardShowEvent, (event) => {
-      Animated.timing(keyboardHeight, {
-        duration: Platform.OS === 'ios' ? 250 : 100, // Faster animation duration
-        toValue: event.endCoordinates.height,
-        useNativeDriver: false,
-      }).start();
-    });
-
-    const keyboardDidHideListener = Keyboard.addListener(keyboardHideEvent, () => {
-      Animated.timing(keyboardHeight, {
-        duration: Platform.OS === 'ios' ? 250 : 100, // Faster animation duration
-        toValue: 0,
-        useNativeDriver: false,
-      }).start();
-    });
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
-  // Translate the entire form based on keyboard visibility
-  const translateY = keyboardHeight.interpolate({
-    inputRange: [0, 300], // Adjust as per your layout
-    outputRange: [0, -160], // Moves the form up when the keyboard opens
-    extrapolate: 'clamp',
-  });
-
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Animated.View style={[styles.inner, { transform: [{ translateY }] }]}>
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+      keyboardVerticalOffset={100} // Adjust based on your header height if any
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.inner}>
           <Text style={styles.title}>Verify Your Phone Number</Text>
           <Text style={styles.subtitle}>Let's Get Started</Text>
           <Image source={require('./images/PHV.jpg')} style={styles.image} />
@@ -89,6 +58,7 @@ const PhoneVerification = ({ navigation }) => {
               maxLength={10}
               value={phoneNumber}
               onChangeText={handlePhoneNumberChange}
+              onSubmitEditing={handleVerifyOTP} // Trigger verification on submit
             />
           </View>
           {errorMessage ? (
@@ -111,9 +81,9 @@ const PhoneVerification = ({ navigation }) => {
           >
             <Text style={styles.ButtonText}>Verify OTP</Text>
           </TouchableOpacity>
-        </Animated.View>
-      </View>
-    </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 

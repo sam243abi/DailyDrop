@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, Image } from 'react-native';
-
+import { useNavigation } from '@react-navigation/native'; // Import navigation hook
 
 const image1 = require('./images/pg1.png'); 
 const image2 = require('./images/pg2.png'); 
@@ -38,12 +38,16 @@ const SlideShow = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
+  const navigation = useNavigation();  // Hook for navigation
 
   const goToNextSlide = () => {
     if (currentIndex < slides.length - 1) {
       const nextIndex = currentIndex + 1;
       flatListRef.current.scrollToIndex({ index: nextIndex });
       setCurrentIndex(nextIndex);
+    } else {
+      // If it's the last slide, navigate to HomeScreen
+      navigation.navigate('HomeScreen');
     }
   };
 
@@ -81,6 +85,7 @@ const SlideShow = () => {
           />
         ))}
       </View>
+
       <TouchableOpacity
         style={styles.leftTouchable}
         onPress={goToPreviousSlide}
@@ -128,7 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    top:-290,
+    top: -290,
   },
   description: {
     fontSize: 16,

@@ -82,7 +82,6 @@ const ProfileCompletion = ({ navigation }) => {
   };
 
   useEffect(() => {
-    // Set up keyboard listeners
     const keyboardShowEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
     const keyboardHideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
@@ -107,11 +106,9 @@ const ProfileCompletion = ({ navigation }) => {
       keyboardDidShowListener.remove();
     };
   }, []);
-
-  // Animate the entire form when the keyboard opens
   const translateY = keyboardHeight.interpolate({
     inputRange: [0, 300],
-    outputRange: [0, -1], // Adjust this value to move the form higher or lower
+    outputRange: [0, -1],
     extrapolate: 'clamp',
   });
 
