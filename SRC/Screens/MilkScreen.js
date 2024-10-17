@@ -8,31 +8,31 @@ import {
   FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useNavigation } from "@react-navigation/native"; 
+import { useNavigation } from "@react-navigation/native";
 
-const waterCanData = [
+const MilkData = [
   {
     id: "1",
-    name: "Bisleri Water Can",
-    price: "₹77/25 ltr Can",
-    image: require("./images/bisleri.png"),
+    name: "Aavin MIlk",
+    price: "₹20/500 ltr Can",
+    image: require("./images/aavinmilk.png"),
   },
   {
     id: "2",
-    name: "Aquafina Water Can",
-    price: "₹77/25 ltr Can",
-    image: require("./images/aquafina.png"),
+    name: "Arokya Milk ",
+    price: "₹21/500ml",
+    image: require("./images/arokyamilk.png"),
   },
   {
-    id: "3",  
-    name: "Blue Star Water Can",
-    price: "₹77/25 ltr Can",
-    image: require("./images/bluestar.png"),
+    id: "3",
+    name: "Avin Double Toned Milk",
+    price: "₹40/500ml",
+    image: require("./images/avindoubletonedmilk.png"),
   },
 ];
 
-const WaterCanScreen = () => {
-  const navigation = useNavigation(); 
+const MilkScreen = () => {
+  const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -43,7 +43,7 @@ const WaterCanScreen = () => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("bisleri")} 
+        onPress={() => navigation.navigate("Heritage")}
       >
         <Text style={styles.buttonText}>Subscribe</Text>
       </TouchableOpacity>
@@ -52,9 +52,9 @@ const WaterCanScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Water Can</Text>
+      <Text style={styles.header}>Milk</Text>
       <FlatList
-        data={waterCanData}
+        data={MilkData}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
@@ -169,4 +169,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WaterCanScreen;
+export default MilkScreen;

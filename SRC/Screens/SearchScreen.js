@@ -75,6 +75,9 @@ const SearchScreen = ({ navigation }) => {
         if (item.name === "Water Can") {
           navigation.navigate("WaterCanScreen"); 
         }
+        if (item.name === "Milk") {
+          navigation.navigate("MilkScreen");
+        }
       }}
     >
       <Image source={item.image} style={styles.iconImage} />
@@ -90,8 +93,6 @@ const SearchScreen = ({ navigation }) => {
         value={searchQuery}
         onChangeText={handleSearch}
       />
-  
-      {/* Header Section */}
       <View style={styles.header}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "Daily" && styles.activeTab]}
@@ -122,9 +123,7 @@ const SearchScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
   
-      {/* Replace ScrollView with View */}
       <View style={styles.scrollViewContent}>
-        {/* Section: What Are You Running Low On */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>What Are You Running Low On?</Text>
           <FlatList
@@ -136,7 +135,6 @@ const SearchScreen = ({ navigation }) => {
           />
         </View>
   
-        {/* Section: Popular in Your Area */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Popular in Your Area</Text>
           <FlatList

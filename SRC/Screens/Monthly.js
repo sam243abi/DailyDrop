@@ -98,11 +98,13 @@ const MonthlyPage = ({ navigation }) => {
           />
         </View>
       )}
+          
       
       <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
         <Text style={styles.confirmButtonText}>Confirm</Text>
       </TouchableOpacity>
     </ScrollView> 
+    
   );
 };
 

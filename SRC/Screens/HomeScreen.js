@@ -14,25 +14,73 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 const HomeScreen = ({ navigation }) => {
   const dailySupplies = [
-    { id: "1", name: "Water Can", image: require("./images/water-can.png") },
-    { id: "2", name: "Milk", image: require("./images/milk-Bottle.png") },
-    { id: "3", name: "Flowers", image: require("./images/flowers.png") },
-    { id: "4", name: "Spinach", image: require("./images/spinach.png") },
-    { id: "5", name: "Post-Workout", image: require("./images/post-workout.png") },
-    { id: "6", name: "Tender Coconut", image: require("./images/tender-coconut.png") },
+    {
+      id: "1",
+      name: "Water Can",
+      image: require("./images/water-can.png"),
+      screen: "WaterCanScreen",
+    },
+    {
+      id: "2",
+      name: "Milk",
+      image: require("./images/milk-Bottle.png"),
+      screen: "MilkScreen",
+    },
+    {
+      id: "3",
+      name: "Flowers",
+      image: require("./images/flowers.png"),
+      screen: "FlowersScreen",
+    },
+    {
+      id: "4",
+      name: "Spinach",
+      image: require("./images/spinach.png"),
+      screen: "SpinachScreen",
+    },
+    {
+      id: "5",
+      name: "Post-Workout",
+      image: require("./images/post-workout.png"),
+      screen: "PostWorkoutScreen",
+    },
+    {
+      id: "6",
+      name: "Tender Coconut",
+      image: require("./images/tender-coconut.png"),
+      screen: "TenderCoconutScreen",
+    },
   ];
 
   const otherServices = [
-    { id: "1", name: "Laundry", image: require("./images/laundry.png") },
-    { id: "2", name: "Medicines", image: require("./images/medicines.png") },
-    { id: "3", name: "Magazines", image: require("./images/magazines.png") },
+    {
+      id: "1",
+      name: "Laundry",
+      image: require("./images/laundry.png"),
+      screen: "LaundryScreen",
+    },
+    {
+      id: "2",
+      name: "Medicines",
+      image: require("./images/medicines.png"),
+      screen: "MedicinesScreen",
+    },
+    {
+      id: "3",
+      name: "Magazines",
+      image: require("./images/magazines.png"),
+      screen: "MagazinesScreen",
+    },
   ];
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
+    <Pressable
+      onPress={() => navigation.navigate(item.screen)}
+      style={styles.item}
+    >
       <Image source={item.image} style={styles.itemImage} />
       <Text style={styles.itemText}>{item.name}</Text>
-    </View>
+    </Pressable>
   );
 
   return (
@@ -57,7 +105,9 @@ const HomeScreen = ({ navigation }) => {
                   />
                   <View>
                     <Text style={styles.bannerTitle}>Daily Drop</Text>
-                    <Text style={styles.bannerSubtitle}>Thirsty for Savings?</Text>
+                    <Text style={styles.bannerSubtitle}>
+                      Thirsty for Savings?
+                    </Text>
                     <Text style={styles.bannerDescription}>
                       Subscribe to Fresh Water Today!
                     </Text>
@@ -92,7 +142,6 @@ const HomeScreen = ({ navigation }) => {
             )}
           />
         </View>
-        {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
           <Pressable
             style={styles.navItem}
@@ -134,11 +183,14 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#f9f9f9",
+    paddingTop: Platform.OS === "android" ? 10 : 10, 
+    paddingBottom: Platform.OS === "android" ? 10 : 10, 
   },
   header: {
-    paddingHorizontal: 10,
-    paddingVertical: 30,
+    paddingHorizontal: 20,
+    paddingVertical: Platform.OS === "android" ? 10 : 10, 
     backgroundColor: "#FFF3E6",
+    paddingVertical : 25,
   },
   deliveryText: {
     fontSize: 14,
@@ -151,12 +203,13 @@ const styles = StyleSheet.create({
   banner: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 35,
+    paddingVertical: Platform.OS === "android" ? 10 : 30,
     paddingHorizontal: 10,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     borderColor: "#b2dfab",
     marginHorizontal: 5,
+    padding: 25,
   },
   bannerImage: {
     width: 80,
@@ -192,7 +245,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     paddingHorizontal: 10,
-    paddingVertical: 30,
+    paddingVertical: Platform.OS === "android" ? 10 : 30, 
   },
   flatListContent: {
     paddingHorizontal: 2,
@@ -200,8 +253,12 @@ const styles = StyleSheet.create({
   item: {
     flex: 1,
     alignItems: "center",
-    paddingVertical: 10,
-    marginHorizontal: 2,
+    paddingVertical: 5,
+    marginHorizontal: 1,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5, 
+    padding: 30, 
   },
   itemImage: {
     width: 60,
@@ -234,3 +291,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+ 

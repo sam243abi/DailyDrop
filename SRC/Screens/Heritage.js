@@ -14,7 +14,7 @@ const ProductScreen = ({ navigation }) => {
   const [isCertification, setIsCertification] = useState(true);
   const [isReview, setIsReview] = useState(true);
   const onSubmit = () => {
-    navigation.navigate('Schedule');
+    navigation.navigate('HeritageSchedule');
   };
 
   return (
