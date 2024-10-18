@@ -132,7 +132,27 @@ const Weekly = ({ navigation }) => {
           todayTextColor: '#004AAD',
           arrowColor: '#004AAD',
         }}
+        
       />
+      //done 
+      <View style={styles.dateQuantityRow}>
+                <Text style={styles.dateText}>{moment(date).format('Do')} of every month</Text>
+                <View style={styles.quantitySelector}>
+                  <TouchableOpacity
+                    onPress={() => updateQuantity(date, false)}
+                    style={styles.quantityButton}
+                  >
+                    <Text style={styles.quantityButtonText}>-</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.quantity}>{quantities[date]}</Text>
+                  <TouchableOpacity
+                    onPress={() => updateQuantity(date, true)}
+                    style={styles.quantityButton}
+                  >
+                    <Text style={styles.quantityButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
       <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate('SubscriptionStartScreen')}>
         <Text style={styles.confirmButtonText}>Confirm</Text>
       </TouchableOpacity>
