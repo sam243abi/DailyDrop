@@ -84,8 +84,6 @@ const DeliveryAddress = () => {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
       >
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          
-          {/* MapView positioned at the top */}
           <MapView
             style={styles.map}
             region={region}
@@ -149,13 +147,13 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    justifyContent: 'flex-start', // Adjust to top-align content
+    justifyContent: 'flex-start',
     paddingHorizontal: 20,
-    paddingBottom: 60,  // Extra padding for the button visibility
+    paddingBottom: 60,
   },
   map: {
     width: '100%',
-    height: 300, // Adjust height if needed
+    height: 300,
     marginBottom: 20,
   },
   title: {

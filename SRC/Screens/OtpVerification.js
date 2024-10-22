@@ -8,7 +8,6 @@ const OtpVerification = ({ navigation }) => {
   const inputRefs = useRef([]);
   const moveAnim = useRef(new Animated.Value(0)).current;
 
-  // Timer to countdown OTP resend
   useEffect(() => {
     let interval = null;
     if (timer > 0) {
@@ -21,11 +20,10 @@ const OtpVerification = ({ navigation }) => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // Smooth keyboard transition
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', (event) => {
       Animated.timing(moveAnim, {
-        toValue: -60, // Adjust this value for smooth transition
+        toValue: -60, 
         duration: event.duration || 250,
         useNativeDriver: true,
       }).start();
@@ -52,7 +50,7 @@ const OtpVerification = ({ navigation }) => {
       setOtp(newOtp);
       setError(false);
       if (value !== '' && index < otp.length - 1) {
-        inputRefs.current[index + 1].focus(); // Automatically move to next field
+        inputRefs.current[index + 1].focus();
       }
     }
   };
@@ -64,10 +62,10 @@ const OtpVerification = ({ navigation }) => {
 
   const handleCompleteProfile = () => {
     if (otp.some((digit) => digit === '')) {
-      setError(true);  // Show error if any OTP field is empty
+      setError(true); 
     } else {
       setError(false);
-      navigation.navigate('ProfileCompletion');  // Navigate to next screen
+      navigation.navigate('ProfileCompletion');  
     }
   };
 

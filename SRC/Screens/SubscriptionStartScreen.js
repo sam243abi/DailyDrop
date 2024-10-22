@@ -23,7 +23,6 @@ const SubscriptionStartScreen = () => {
   return (
     <Provider>
       <View style={styles.container}>
-        {/* Three Dots Menu */}
         <View style={styles.menuContainer}>
           <Menu
             visible={menuVisible}

@@ -162,16 +162,23 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   subscribeButton: {
-    backgroundColor: '#0080ff',
-    padding: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#0080ff',  
+    paddingVertical: 10,         
+    paddingHorizontal: 20,       
+    justifyContent: 'center',    
+    alignItems: 'center',       
+    borderRadius: 8,             
+    marginVertical: 20,          
+    alignSelf: 'center',         
+    elevation: 2,               
+    top:-60
   },
   subscribeButtonText: {
-    fontSize: 16,
-    color: '#ffffff',
-    fontWeight: 'bold',
+    fontSize: 16,               
+    color: '#ffffff',            
+    fontWeight: 'bold',          
   },
+  
   si: {
     height: '100%',
     width: '100%',

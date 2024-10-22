@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import {View,Text,StyleSheet,Image,TouchableOpacity,FlatList,} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 
@@ -27,7 +20,7 @@ const MilkData = [
     id: "3",
     name: "Avin Double Toned Milk",
     price: "₹40/500ml",
-    image: require("./images/avindoubletonedmilk.png"),
+    image: require("./images/arokyamilk.png"),
   },
 ];
 

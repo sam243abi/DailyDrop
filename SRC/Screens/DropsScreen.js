@@ -3,19 +3,17 @@ import {View,Text,StyleSheet,TouchableOpacity,Image,FlatList,} from "react-nativ
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import moment from "moment"; // For date formatting
+import moment from "moment";
 
 const DropsScreen = () => {
   const navigation = useNavigation();
-  const [selectedTab, setSelectedTab] = useState("Delivered"); // To manage which list is shown
+  const [selectedTab, setSelectedTab] = useState("Delivered"); 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Default to today
+  const [selectedDate, setSelectedDate] = useState(new Date()); 
 
   const pressSearch = () => {
     navigation.navigate("SearchScreen");
   };
-
-  // Product data
   const products = [
     {
       id: 1,
@@ -42,16 +40,12 @@ const DropsScreen = () => {
       image: require("./images/aquafina.png"),
     },
   ];
-
-  // Separate Delivered and Scheduled products
   const deliveredProducts = products.filter(
     (product) => product.status === "Delivered"
   );
   const scheduledProducts = products.filter(
     (product) => product.status === "Scheduled"
   );
-
-  // Render Product List Item
   const renderProductItem = ({ item }) => (
     <View style={styles.productItem}>
       <Image source={item.image} style={styles.productImage} />
@@ -73,44 +67,33 @@ const DropsScreen = () => {
       </TouchableOpacity>
     </View>
   );
-
-  // Function to show the date picker
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
-
-  // Function to hide the date picker
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-
-  // Handle date selection
   const handleConfirm = (date) => {
-    setSelectedDate(date); // Update the selected date
-    hideDatePicker(); // Hide the picker
+    setSelectedDate(date);
+    hideDatePicker();
   };
 
   return (
     <View style={styles.container}>
-      {/* Top Header with Calendar Icon */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Drops</Text>
         <TouchableOpacity onPress={showDatePicker} style={styles.calendarIcon}>
           <Icon name="calendar" size={24} color="#555" />
         </TouchableOpacity>
       </View>
-
-      {/* Date Picker Modal */}
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
-        maximumDate={new Date(2025, 12, 31)} // Allow future months
-        minimumDate={new Date(2023, 0, 1)} // Allow past months
+        maximumDate={new Date(2025, 12, 31)}
+        minimumDate={new Date(2023, 0, 1)}
       />
-
-      {/* Top Tabs for Delivered and Scheduled */}
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[
@@ -131,11 +114,7 @@ const DropsScreen = () => {
           <Text style={styles.tabButtonText}>Scheduled</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Add space between the tabs and product list */}
       <View style={{ height: 20 }} />
-
-      {/* Displaying the corresponding list based on selected tab */}
       <FlatList
         data={
           selectedTab === "Delivered" ? deliveredProducts : scheduledProducts
@@ -144,8 +123,6 @@ const DropsScreen = () => {
         keyExtractor={(item) => item.id.toString()}
         style={styles.productList}
       />
-
-      {/* Bottom Navigation with Icons */}
       <View style={styles.bottomNav}>
         <TouchableOpacity
           style={styles.navItem}

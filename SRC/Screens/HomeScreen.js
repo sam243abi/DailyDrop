@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  Pressable,
-  StyleSheet,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import {SafeAreaView,View,Text,Image,Pressable,StyleSheet,FlatList,KeyboardAvoidingView,Platform,} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const HomeScreen = ({ navigation }) => {

@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TextInput, 
-  Image, 
-  TouchableOpacity, 
-  Keyboard, 
-  KeyboardAvoidingView, 
-  Platform ,
-  TouchableWithoutFeedback
-} from 'react-native';
-
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Keyboard, KeyboardAvoidingView, Platform ,TouchableWithoutFeedback} from 'react-native';
 const PhoneVerification = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isChecked, setIsChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handlePhoneNumberChange = (text) => {
-    const formattedText = text.replace(/[^0-9]/g, ''); // Allow only numbers
+    const formattedText = text.replace(/[^0-9]/g, ''); 
     setPhoneNumber(formattedText);
   };
 
@@ -32,7 +20,7 @@ const PhoneVerification = ({ navigation }) => {
       setErrorMessage('*Phone number must be exactly 10 digits');
     } else {
       setErrorMessage('');
-      navigation.navigate('OTP Verification'); // Navigate to OTP verification screen
+      navigation.navigate('OTP Verification');
     }
   };
 
@@ -40,7 +28,7 @@ const PhoneVerification = ({ navigation }) => {
     <KeyboardAvoidingView 
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      keyboardVerticalOffset={100} // Adjust based on your header height if any
+      keyboardVerticalOffset={100} 
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.inner}>
@@ -58,7 +46,7 @@ const PhoneVerification = ({ navigation }) => {
               maxLength={10}
               value={phoneNumber}
               onChangeText={handlePhoneNumberChange}
-              onSubmitEditing={handleVerifyOTP} // Trigger verification on submit
+              onSubmitEditing={handleVerifyOTP} 
             />
           </View>
           {errorMessage ? (

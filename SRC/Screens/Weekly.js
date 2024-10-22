@@ -9,10 +9,7 @@ const Weekly = ({ navigation }) => {
   const [startDate, setStartDate] = useState('');        
   
   const days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];  
-
-
   const dayOfWeekMap = { 'Mo': 1, 'Tu': 2, 'We': 3, 'Th': 4, 'Fr': 5, 'Sa': 6, 'Su': 0 };
-
 
   const disablePastDates = () => {
     const today = new Date().toISOString().split('T')[0];
@@ -45,17 +42,19 @@ const Weekly = ({ navigation }) => {
     }
     setSelectedDays(updatedDays);
   };
+
   const handleQuantityChange = (day, change) => {
     setQuantities((prev) => ({
       ...prev,
       [day]: Math.max(1, (prev[day] || 1) + change),
     }));
   };
-  const calculateNextDeliveryDays = (startDate) => {
-    if (!startDate || selectedDays.length === 0) return {};
 
+  const calculateNextDeliveryDays = (startDate) => {
+    if (!startDate) return {};
     const start = new Date(startDate);
     const markedDates = { [startDate]: { selected: true, selectedColor: '#004AAD', selectedTextColor: 'white' } };
+    
     for (let i = 1; i <= 30; i++) {
       const nextDay = new Date(start);
       nextDay.setDate(start.getDate() + i);
@@ -69,28 +68,21 @@ const Weekly = ({ navigation }) => {
 
     return markedDates;
   };
+
   const handleStartDateSelect = (date) => {
     setStartDate(date.dateString);
   };
+
   const renderDayButton = (day) => (
     <TouchableOpacity
       key={day}
-      style={[
-        styles.dayButton,
-        selectedDays.includes(day) && styles.selectedDayButton,
-      ]}
+      style={[styles.dayButton, selectedDays.includes(day) && styles.selectedDayButton]}
       onPress={() => handleDaySelect(day)}
     >
-      <Text
-        style={[
-          styles.dayText,
-          selectedDays.includes(day) && styles.selectedDayText,
-        ]}
-      >
-        {day}
-      </Text>
+      <Text style={[styles.dayText, selectedDays.includes(day) && styles.selectedDayText]}>{day}</Text>
     </TouchableOpacity>
   );
+
   const renderQuantitySelector = (day) => (
     <View style={styles.quantityContainer} key={day}>
       <Text>{`${day} of every week`}</Text>
@@ -122,7 +114,8 @@ const Weekly = ({ navigation }) => {
       <Calendar
         onDayPress={handleStartDateSelect}
         markedDates={{
-          ...disablePastDates(),              
+          ...disablePastDates(),
+          [startDate]: { selected: true, selectedColor: '#004AAD', selectedTextColor: 'white' },
           ...calculateNextDeliveryDays(startDate), 
         }}
         theme={{
@@ -132,31 +125,12 @@ const Weekly = ({ navigation }) => {
           todayTextColor: '#004AAD',
           arrowColor: '#004AAD',
         }}
-        
       />
-      //done 
-      <View style={styles.dateQuantityRow}>
-                <Text style={styles.dateText}>{moment(date).format('Do')} of every month</Text>
-                <View style={styles.quantitySelector}>
-                  <TouchableOpacity
-                    onPress={() => updateQuantity(date, false)}
-                    style={styles.quantityButton}
-                  >
-                    <Text style={styles.quantityButtonText}>-</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.quantity}>{quantities[date]}</Text>
-                  <TouchableOpacity
-                    onPress={() => updateQuantity(date, true)}
-                    style={styles.quantityButton}
-                  >
-                    <Text style={styles.quantityButtonText}>+</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+
       <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate('SubscriptionStartScreen')}>
         <Text style={styles.confirmButtonText}>Confirm</Text>
       </TouchableOpacity>
-      </ScrollView>
+    </ScrollView>
   );
 };
 
@@ -165,69 +139,71 @@ const styles = StyleSheet.create({
     flex: 1, 
     padding: 16, 
     backgroundColor: 'white' 
-},
+  },
   header: { 
     fontSize: 18, 
-    fontWeight: 'bold',
+    fontWeight: 'bold', 
     marginVertical: 10 
-},
+  },
   daysContainer: { 
     flexDirection: 'row', 
     justifyContent: 'space-around' 
-},
+  },
   dayButton: {
-    padding: 10,
-    borderRadius: 20,
-    backgroundColor: '#e0e0e0',
-},
+    padding: 10, 
+    borderRadius: 20, 
+    backgroundColor: '#e0e0e0' 
+  },
   selectedDayButton: { 
     backgroundColor: '#004AAD' 
-},
-  dayText: { 
+  },
+  dayText: {
     fontSize: 16 
-},
-  selectedDayText: {
+  },
+  selectedDayText: { 
     color: 'white' 
-},
+  },
   noDaysText: { 
     fontSize: 16, 
     color: 'grey', 
     textAlign: 'center' 
-},
+  },
   quantityContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 10,
-},
-  quantityControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-},
-  quantityButton: {
-    backgroundColor: '#E0F0FF',
-    padding: 10,
-    borderRadius: 10,
-},
-  quantityButtonText: {
-    fontSize: 18,
-    color: '#004AAD',
-},
-  quantityText: { fontSize: 16, marginHorizontal: 10 },
-  confirmButton: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginVertical: 10 
+  },
+  quantityControls: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  },
+  quantityButton: { 
+    backgroundColor: '#E0F0FF', 
+    padding: 10, 
+    borderRadius: 10 
+  },
+  quantityButtonText: { 
+    fontSize: 18, 
+    color: '#004AAD' 
+  },
+  quantityText: { 
+    fontSize: 16, 
+    marginHorizontal: 10 
+  },
+  confirmButton: { 
     backgroundColor: '#004AAD', 
     padding: 15, 
     borderRadius: 10, 
     alignItems: 'center', 
-    marginTop: 30 ,
-    paddingtop:20
-},
+    marginTop: 30 
+  },
   confirmButtonText: { 
     color: '#fff', 
     fontSize: 16, 
-    fontWeight: 'bold'
-},
+    fontWeight: 'bold' 
+  },
 });
 
 export default Weekly;

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { useNavigation } from '@react-navigation/native';
 
 const image1 = require('./images/pg1.png'); 
 const image2 = require('./images/pg2.png'); 
@@ -38,7 +38,7 @@ const SlideShow = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
-  const navigation = useNavigation();  // Hook for navigation
+  const navigation = useNavigation();
 
   const goToNextSlide = () => {
     if (currentIndex < slides.length - 1) {
@@ -46,7 +46,6 @@ const SlideShow = () => {
       flatListRef.current.scrollToIndex({ index: nextIndex });
       setCurrentIndex(nextIndex);
     } else {
-      // If it's the last slide, navigate to HomeScreen
       navigation.navigate('HomeScreen');
     }
   };
